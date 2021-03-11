@@ -2,6 +2,7 @@ library(tidyverse)
 library(lubridate)
 
 arrests.df <- read.csv("Arrests.csv", stringsAsFactors = FALSE)
+crime.df <- read.csv("Part1_Crime_data.csv", stringsAsFactors = FALSE)
 
 str(arrests.df)
 
@@ -28,6 +29,10 @@ arrests.df.yearly <- arrests.df %>% group_by(year, week(ArrestDateTime)) %>% sum
 
 colnames(arrests.df.yearly) <- c("year", "week", "arrests")
 ggplot(arrests.df.yearly, aes(x = week, y = arrests)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~year)
+
+ggplot(arrests.df.yearly, aes(x = year, y = arrests)) +
   geom_bar(stat = "identity") +
   facet_wrap(~year)
 
