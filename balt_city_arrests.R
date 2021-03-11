@@ -35,4 +35,24 @@ ggplot(arrests.df.yearly, aes(x = week, y = arrests)) +
 ggplot(arrests.df.yearly, aes(x = year, y = arrests)) +
   geom_bar(stat = "identity") +
   facet_wrap(~year)
+#line
+ggplot(arrests.df.yearly, aes(x = factor(week), y = arrests, color = factor(year), group = year)) +
+  geom_line(stat = "identity") +
+  theme_classic()
 
+#crime stats
+
+gsub("/","-",crime.df$CrimeDateTime)
+crime.df$CrimeDateTime <- date(crime.df$CrimeDateTime)
+
+crime.df$year <- year(crime.df$CrimeDateTime)
+crime.df$week <- week(crime.df$CrimeDateTime)
+
+crime.df.yearly <- crime.df %>% group_by(year, week, Description) %>% summarise(n = n_distinct(RowID))
+
+crime.df.yearly <- crime.df.yearly %>% filter(year > '2013')
+
+ggplot(crime.df.yearly, aes(x = factor(week), y = n, color = factor(Description), group = Description)) +
+  geom_line() +
+  facet_wrap(~year) +
+  theme_classic()
